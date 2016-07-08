@@ -95,14 +95,14 @@
     <ClInclude Include="SystemClass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.vs">
+    <None Include="colorVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.ps">
+    <None Include="colorPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </None>
   </ItemGroup>
