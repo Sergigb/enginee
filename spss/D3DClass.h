@@ -19,7 +19,8 @@
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <d3dx10math.h>		//this is a legacy d3dx10 library and should be replaced with DirectXMath.h
+#include <DirectXMath.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
