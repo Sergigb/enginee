@@ -8,6 +8,7 @@ ModelClass::ModelClass()
 {
 	m_vertexBuffer = NULL;
 	m_indexBuffer = NULL;
+	m_Texture = NULL;
 }
 
 
@@ -20,7 +21,7 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device)
+bool ModelClass::Initialize(ID3D11Device* device, WCHAR* textureFilename)
 {
 	bool result;
 
@@ -32,11 +33,21 @@ bool ModelClass::Initialize(ID3D11Device* device)
 		return false;
 	}
 
+	// Load the texture for this model.
+	result = LoadTexture(device, textureFilename);
+	if(!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
 void ModelClass::Shutdown()
 {
+	// Release the model texture.
+	ReleaseTexture();
+
 	// Release the vertex and index buffers.
 	ShutdownBuffers();
 
@@ -55,6 +66,12 @@ int ModelClass::GetIndexCount()
 {
 	return m_indexCount;
 }
+
+ID3D11ShaderResourceView* ModelClass::GetTexture()
+{
+	return m_Texture->GetTexture();
+}
+
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
@@ -86,20 +103,20 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	// Load the vertex array with data.
 	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].texture = D3DXVECTOR2(0.0f, 1.0f);
 
 	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].texture = D3DXVECTOR2(0.5f, 0.0f);
 
 	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].texture = D3DXVECTOR2(1.0f, 1.0f);
 
 	// Load the index array with data.
 	indices[0] = 0;  // Bottom left.
 	indices[1] = 1;  // Top middle.
 	indices[2] = 2;  // Bottom right.
 
-		// Set up the description of the static vertex buffer.
+	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -185,6 +202,41 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	return;
+}
+
+bool ModelClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
+{
+	bool result;
+
+
+	// Create the texture object.
+	m_Texture = new TextureClass;
+	if(!m_Texture)
+	{
+		return false;
+	}
+
+	// Initialize the texture object.
+	result = m_Texture->Initialize(device, filename);
+	if(!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void ModelClass::ReleaseTexture()
+{
+	// Release the texture object.
+	if(m_Texture)
+	{
+		m_Texture->Shutdown();
+		delete m_Texture;
+		m_Texture = 0;
+	}
 
 	return;
 }

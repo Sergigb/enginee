@@ -80,7 +80,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	vertexShaderBuffer = NULL;
 	pixelShaderBuffer = NULL;
 
-		// Compile the vertex shader code.
+	// Compile the vertex shader code.
 	result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
 				       &vertexShaderBuffer, &errorMessage, NULL);
 	if(FAILED(result))
@@ -167,7 +167,8 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 
 	pixelShaderBuffer->Release();
 	pixelShaderBuffer = NULL;
-		// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -245,7 +246,7 @@ void ColorShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND h
 
 	// Release the error message.
 	errorMessage->Release();
-	errorMessage = 0;
+	errorMessage = NULL;
 
 	// Pop a message up on the screen to notify the user to check the text file for compile errors.
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);

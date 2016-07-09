@@ -83,6 +83,8 @@
     <ClCompile Include="InputClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
+    <ClCompile Include="TextureClass.cpp" />
+    <ClCompile Include="TextureShaderClass.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +95,8 @@
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="SystemClass.h" />
+    <ClInclude Include="TextureClass.h" />
+    <ClInclude Include="TextureShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="colorVS.hlsl">
@@ -104,6 +108,14 @@
   <ItemGroup>
     <None Include="colorPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TexturePS.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="TextureVS.hlsl">
+      <FileType>Document</FileType>
     </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
