@@ -98,11 +98,13 @@
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TextureShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="colorVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -129,6 +131,9 @@
     <None Include="LightVS.hlsl">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="spss.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
