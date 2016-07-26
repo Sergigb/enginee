@@ -11,6 +11,7 @@ GraphicsClass::GraphicsClass()
 	m_Model = NULL;
 	m_LightShader = NULL;
 	m_Light = NULL;
+	m_Bitmap = NULL;
 }
 
 
@@ -62,7 +63,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/cube.txt", L"../spss/data/seafloor.dds");	if(!result)
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/cube.txt", L"../spss/data/seafloor.dds");	
+	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
@@ -91,9 +93,46 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the light object.
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetSpecularPower(32.0f);
 
+	
+	// Set the initial position of the camera.
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	
+	// Create the texture shader object.
+	m_TextureShader = new TextureShaderClass;
+	if(!m_TextureShader)
+	{
+		return false;
+	}
+
+	// Initialize the texture shader object.
+	result = m_TextureShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+
+	// Create the bitmap object.
+	m_Bitmap = new BitmapClass;
+	if(!m_Bitmap)
+	{
+		return false;
+	}
+
+	// Initialize the bitmap object.
+	result = m_Bitmap->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, L"../spss/data/seafloor.dds", 256, 256);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
+		return false;
+	}
 
 	return true;
 }
@@ -102,11 +141,19 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::Shutdown()
 {
 
+	// Release the bitmap object.
+	if(m_Bitmap)
+	{
+		m_Bitmap->Shutdown();
+		delete m_Bitmap;
+		m_Bitmap = NULL;
+	}
+
 	// Release the light object.
 	if(m_Light)
 	{
 		delete m_Light;
-		m_Light = 0;
+		m_Light = NULL;
 	}
 
 	// Release the light shader object.
@@ -114,7 +161,7 @@ void GraphicsClass::Shutdown()
 	{
 		m_LightShader->Shutdown();
 		delete m_LightShader;
-		m_LightShader = 0;
+		m_LightShader = NULL;
 	}
 	// Release the model object.
 	if(m_Model)
@@ -145,14 +192,14 @@ bool GraphicsClass::Frame()
 	bool result;
 	static float rotation = 0.0f;
 
-
 	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.01f;
+	rotation += (float)D3DX_PI * 0.005f;
 
 	if(rotation > 360.0f)
 	{
 		rotation -= 360.0f;
 	}
+
 	// Render the graphics scene.
 	result = Render(rotation);
 	if(!result)
@@ -165,7 +212,8 @@ bool GraphicsClass::Frame()
 
 bool GraphicsClass::Render(float rotation)
 {
-	D3DXMATRIX viewMatrix, projectionMatrix, worldMatrix;
+
+	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	bool result;
 
 
@@ -175,28 +223,38 @@ bool GraphicsClass::Render(float rotation)
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
-	// Get the world, view, and projection matrices from the camera and d3d objects.
+	// Get the world, view, projection, and ortho matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 
-	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	D3DXMatrixRotationY(&worldMatrix, rotation);
+	m_D3D->GetOrthoMatrix(orthoMatrix);
 	
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
+	// Turn off the Z buffer to begin all 2D rendering.
+	m_D3D->TurnZBufferOff();
 
-	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-				       m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 100, 100);
 	if(!result)
 	{
 		return false;
 	}
 
+	// Render the bitmap with the texture shader.
+	result = m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
+	if(!result)
+	{
+		return false;
+	}
+
+	// Turn the Z buffer back on now that all 2D rendering has completed.
+	m_D3D->TurnZBufferOn();
+
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 
+	
 	return true;
-}
 
+
+}
