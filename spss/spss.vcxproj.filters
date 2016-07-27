@@ -54,6 +54,15 @@
     <ClInclude Include="BitmapClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Fontclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fontshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -95,6 +104,15 @@
     <ClCompile Include="BitmapClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Fontclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fontshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="colorPS.hlsl">
@@ -116,6 +134,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="FontVS.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="FontPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="spss.rc">

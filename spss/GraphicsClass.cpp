@@ -12,6 +12,7 @@ GraphicsClass::GraphicsClass()
 	m_LightShader = NULL;
 	m_Light = NULL;
 	m_Bitmap = NULL;
+	m_Text = NULL;
 }
 
 
@@ -29,6 +30,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 
 	bool result;
+	D3DXMATRIX baseViewMatrix;
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -53,7 +55,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(-0.0f, -0.0f, -10.0f);
 	
 	// Create the model object.
 	m_Model = new ModelClass;
@@ -99,10 +101,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(32.0f);
 
-	
-	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-	
+
 	// Create the texture shader object.
 	m_TextureShader = new TextureShaderClass;
 	if(!m_TextureShader)
@@ -134,12 +133,39 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Initialize a base view matrix with the camera for 2D user interface rendering.
+	m_Camera->Render();
+	m_Camera->GetViewMatrix(baseViewMatrix);
+
+	// Create the text object.
+	m_Text = new TextClass;
+	if(!m_Text)
+	{
+		return false;
+	}
+
+	// Initialize the text object.
+	result = m_Text->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+		return false;
+	}
+
+
 	return true;
 }
 
 
 void GraphicsClass::Shutdown()
 {
+	// Release the text object.
+	if(m_Text)
+	{
+		m_Text->Shutdown();
+		delete m_Text;
+		m_Text = 0;
+	}
 
 	// Release the bitmap object.
 	if(m_Bitmap)
@@ -191,14 +217,21 @@ bool GraphicsClass::Frame()
 {
 	bool result;
 	static float rotation = 0.0f;
+	static float cameraZ = -10.0f;
 
 	// Update the rotation variable each frame.
 	rotation += (float)D3DX_PI * 0.005f;
+	cameraZ -= 0.1f;
+
+
+	if(cameraZ < -25.0f)
+		cameraZ = -10.0f;
 
 	if(rotation > 360.0f)
-	{
 		rotation -= 360.0f;
-	}
+
+	m_Camera->SetPosition(-0.0f, -0.0f, cameraZ);
+
 
 	// Render the graphics scene.
 	result = Render(rotation);
@@ -227,12 +260,28 @@ bool GraphicsClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
-
 	m_D3D->GetOrthoMatrix(orthoMatrix);
+
+
+	// Rotate the world matrix by the rotation value so that the triangle will spin.
+	D3DXMatrixRotationY(&worldMatrix, rotation);
 	
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+				       m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), 
+				       m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+
+	if(!result)
+	{
+		return false;
+	}
+		
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_D3D->TurnZBufferOff();
-
+	
 	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	result = m_Bitmap->Render(m_D3D->GetDeviceContext(), 100, 100);
 	if(!result)
@@ -247,13 +296,25 @@ bool GraphicsClass::Render(float rotation)
 		return false;
 	}
 
+	// Turn on the alpha blending before rendering the text.
+	m_D3D->TurnOnAlphaBlending();
+
+	// Render the text strings.
+	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+	if(!result)
+	{
+		return false;
+	}
+
+	// Turn off alpha blending after rendering the text.
+	m_D3D->TurnOffAlphaBlending();
+
 	// Turn the Z buffer back on now that all 2D rendering has completed.
 	m_D3D->TurnZBufferOn();
 
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 
-	
 	return true;
 
 

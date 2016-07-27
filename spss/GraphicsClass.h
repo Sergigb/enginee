@@ -16,7 +16,7 @@
 #include "lightclass.h"
 #include "textureshaderclass.h"
 #include "bitmapclass.h"
-
+#include "textclass.h"
 
 
 /////////////
@@ -52,6 +52,7 @@ private:
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
+	TextClass* m_Text;
 };
 
 #endif
