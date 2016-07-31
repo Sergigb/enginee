@@ -17,13 +17,14 @@
 #include "textureshaderclass.h"
 #include "bitmapclass.h"
 #include "textclass.h"
-
+#include "modellistclass.h"
+#include "frustumclass.h"
 
 /////////////
 // GLOBALS //
 /////////////
 const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = false;
+const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
@@ -39,7 +40,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int, float);
+	bool Frame(float);
 	bool Render();
 
 
@@ -52,6 +53,8 @@ private:
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
 	TextClass* m_Text;
+	ModelListClass* m_ModelList;
+	FrustumClass* m_Frustum;
 };
 
 #endif

@@ -66,28 +66,28 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence1, 256, device);
+	result = InitializeSentence(&m_sentence1, 16, device);
 	if(!result)
 	{
 		return false;
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "This is a test. The camera is moving, not the cube.", 10, 10, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence1, "", 10, 10, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
 	}
 
 	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence2, 256, device);
+	result = InitializeSentence(&m_sentence2, 16, device);
 	if(!result)
 	{
 		return false;
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "This thing above me is a 2D texture", 100, 360, 1.0f, 1.0f, 0.0f, deviceContext);
+	result = UpdateSentence(m_sentence2, "", 100, 360, 1.0f, 1.0f, 0.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -461,3 +461,27 @@ bool TextClass::SetCpu(int cpu, ID3D11DeviceContext* deviceContext)
 	return true;
 }
 
+
+bool TextClass::SetRenderCount(int count, ID3D11DeviceContext* deviceContext)
+{
+	char tempString[32];
+	char countString[32];
+	bool result;
+
+
+	// Convert the count integer to string format.
+	_itoa_s(count, tempString, 10);
+
+	// Setup the render count string.
+	strcpy_s(countString, "Render Count: ");
+	strcat_s(countString, tempString);
+
+	// Update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence1, countString, 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
+	if(!result)
+	{
+		return false;
+	}
+
+	return true;
+}
