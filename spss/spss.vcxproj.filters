@@ -81,6 +81,12 @@
     <ClInclude Include="PositionClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MultitextureshaderClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturearrayClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -149,6 +155,12 @@
     <ClCompile Include="PositionClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MultitextureshaderClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texturearrayclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="colorPS.hlsl">
@@ -174,6 +186,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="FontPS.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MultitexturePS.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MultitextureVS.hlsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

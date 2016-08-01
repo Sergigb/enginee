@@ -19,6 +19,7 @@
 #include "textclass.h"
 #include "modellistclass.h"
 #include "frustumclass.h"
+#include "multitextureshaderclass.h"
 
 /////////////
 // GLOBALS //
@@ -55,6 +56,7 @@ private:
 	TextClass* m_Text;
 	ModelListClass* m_ModelList;
 	FrustumClass* m_Frustum;
+	MultiTextureShaderClass* m_MultiTextureShader;
 };
 
 #endif

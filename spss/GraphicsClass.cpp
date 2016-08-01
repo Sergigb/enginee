@@ -67,12 +67,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/sphere.txt", L"../spss/data/seafloor.dds");	
-	if(!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	//result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/sphere.txt", L"../spss/data/seafloor.dds");	
+	//if(!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//	return false;
+	//}
 
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -176,6 +176,30 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Initialize the model object.
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/square.txt", L"../spss/data/stone01.dds" ,
+				     L"../Engine/data/dirt01.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the multitexture shader object.
+	m_MultiTextureShader = new MultiTextureShaderClass;
+	if(!m_MultiTextureShader)
+	{
+		return false;
+	}
+
+	// Initialize the multitexture shader object.
+	result = m_MultiTextureShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	return true;
 }
 
@@ -221,6 +245,14 @@ bool TextClass::SetMousePosition(int mouseX, int mouseY, ID3D11DeviceContext* de
 
 void GraphicsClass::Shutdown()
 {
+	// Release the multitexture shader object.
+	if(m_MultiTextureShader)
+	{
+		m_MultiTextureShader->Shutdown();
+		delete m_MultiTextureShader;
+		m_MultiTextureShader = 0;
+	}
+
 	// Release the frustum object.
 	if(m_Frustum)
 	{
@@ -367,6 +399,7 @@ bool GraphicsClass::Render()
 			// Since this model was rendered then increase the count for this frame.
 			renderCount++;
 		}
+
 	}
 
 	// Set the number of models that was actually rendered this frame.
@@ -394,6 +427,12 @@ bool GraphicsClass::Render()
 
 	// Turn the Z buffer back on now that all 2D rendering has completed.
 	m_D3D->TurnZBufferOn();
+
+	// Render the model using the multitexture shader.
+	m_MultiTextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+				     m_Model->GetTextureArray());
+
+
 
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
