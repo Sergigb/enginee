@@ -27,17 +27,20 @@ public:
 	~Object();
 	void GetCoordinates(double*, double*, double*);
 	void GetRotation(DirectX::XMVECTOR*);
+	void GetSpeed(DirectX::XMFLOAT3*);
 
+	void SetSpeed(float, float, float);
+	void SetRotation(float, float, float);
 	void translateXYZ(double, double, double);
+
 	void frame(float);
-	void SetSpeed(float);
 	void rotate(float, float, float);
 
 private:
 	void SetCoordinates(double, double, double);
 
 private:
-	float m_speed;
+	DirectX::XMFLOAT3 m_speed;
 	Common::coordinates m_objectCoordinates;
 	DirectX::XMVECTOR m_objectRotation;
 };
