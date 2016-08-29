@@ -25,6 +25,7 @@
 #include "cpuclass.h"
 #include "timerclass.h"
 #include "positionclass.h"
+#include "Object.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +61,7 @@ private:
 	CpuClass* m_Cpu;
 	TimerClass* m_Timer;	
 	PositionClass* m_Position;
+	Object *m_object;
 };
 
 

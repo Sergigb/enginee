@@ -67,7 +67,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/sphere.txt", L"../spss/data/seafloor.dds");	
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../spss/data/cube.txt", L"../spss/data/seafloor.dds");	
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -304,7 +304,7 @@ bool GraphicsClass::Frame(float rotationY)
 }
 
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(Object *m_object)
 {
 
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
@@ -336,7 +336,7 @@ bool GraphicsClass::Render()
 	renderCount = 0;
 
 	// Go through all the models and render them only if they can be seen by the camera view.
-	for(index=0; index<modelCount; index++)
+	/*for(index=0; index<modelCount; index++)
 	{
 		// Get the position and color of the sphere model at this index.
 		m_ModelList->GetData(index, positionX, positionY, positionZ, color);
@@ -367,7 +367,37 @@ bool GraphicsClass::Render()
 			// Since this model was rendered then increase the count for this frame.
 			renderCount++;
 		}
-	}
+	}*/
+
+	//test rendering
+
+	Common::coordinates coords;
+	DirectX::XMVECTOR quatRot;
+	DirectX::XMFLOAT4 f_rotation;
+	D3DXMATRIX mat_rotation;
+	D3DXQUATERNION d3dxquat;
+
+	m_object->GetQuaternion(&quatRot);
+	m_object->GetCoordinates(&coords.x, &coords.y, &coords.z);
+
+	DirectX::XMStoreFloat4(&f_rotation, quatRot);
+
+	d3dxquat.w = f_rotation.w;
+	d3dxquat.x = f_rotation.x;
+	d3dxquat.y = f_rotation.y;
+	d3dxquat.z = f_rotation.z;
+
+	D3DXMatrixRotationQuaternion(&mat_rotation, &d3dxquat);
+	D3DXMatrixTranslation(&worldMatrix, coords.x, coords.y, coords.z);
+	D3DXMatrixMultiply(&worldMatrix, &mat_rotation, &worldMatrix);
+
+	m_Model->Render(m_D3D->GetDeviceContext());
+
+	m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+				       m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), 
+						m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+
+	m_D3D->GetWorldMatrix(worldMatrix);
 
 	// Set the number of models that was actually rendered this frame.
 	result = m_Text->SetRenderCount(renderCount, m_D3D->GetDeviceContext());

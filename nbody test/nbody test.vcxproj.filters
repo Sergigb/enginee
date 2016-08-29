@@ -26,10 +26,13 @@
     <ClInclude Include="ObjectClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h">
+    <ClInclude Include="SystemClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SystemClass.h">
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -108,8 +108,14 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
-	return true;
-	
+	//Object Test
+
+	m_object = new Object;
+	if(!m_object)
+		return false;
+
+	m_object->SetCoordinates(0.0, 0.0, -2.0);
+
 	return true;
 }
 
@@ -230,6 +236,50 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+
+
+	if(m_Input->IsAArrowPressed()){
+		m_object->rotate(0.0f, 0.01f, 0.0f);
+	}
+
+	if(m_Input->IsDArrowPressed()){
+		m_object->rotate(0.0f, -0.01f, 0.0f);
+	}
+
+	if(m_Input->IsWArrowPressed()){
+		m_object->rotate(0.01f, 0.0f, 0.0f);
+	}
+
+	if(m_Input->IsSArrowPressed()){
+		m_object->rotate(-0.01f, 0.0f, 0.0f);
+	}
+
+	if(m_Input->IsQArrowPressed()){
+		m_object->rotate(0.0f, 0.0f, 0.01f);
+	}
+
+	if(m_Input->IsEArrowPressed()){
+		m_object->rotate(0.0f, 0.0f, -0.01f);
+	}
+
+	if(m_Input->IsIArrowPressed()){
+		m_object->translateLocal(0.01f, 0.0f, 0.0f);
+	}
+
+	if(m_Input->IsKArrowPressed()){
+		m_object->translateLocal(-0.01f, 0.0f, 0.0f);
+	}
+
+	if(m_Input->IsJArrowPressed()){
+		m_object->translateLocal(0.0f, 0.01f, 0.0f);
+	}
+
+	if(m_Input->IsLArrowPressed()){
+		m_object->translateLocal(0.0f, -0.01f, 0.0f);
+	}
+
+
+
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
@@ -245,13 +295,14 @@ bool SystemClass::Frame()
 
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame(rotationY);
+
 	if(!result)
 	{
 		return false;
 	}
 
 	// Finally render the graphics to the screen.
-	result = m_Graphics->Render();
+	result = m_Graphics->Render(m_object);
 	if(!result)
 	{
 		return false;

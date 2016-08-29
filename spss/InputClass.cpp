@@ -262,3 +262,111 @@ bool InputClass::IsRightArrowPressed()
 
 	return false;
 }
+
+
+bool InputClass::IsAArrowPressed()
+{
+	if(m_keyboardState[DIK_A] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsSArrowPressed()
+{
+	if(m_keyboardState[DIK_S] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsDArrowPressed()
+{
+	if(m_keyboardState[DIK_D] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsWArrowPressed()
+{
+	if(m_keyboardState[DIK_W] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsQArrowPressed()
+{
+	if(m_keyboardState[DIK_Q] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsEArrowPressed()
+{
+	if(m_keyboardState[DIK_E] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsIArrowPressed()
+{
+	if(m_keyboardState[DIK_I] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsJArrowPressed()
+{
+	if(m_keyboardState[DIK_J] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsKArrowPressed()
+{
+	if(m_keyboardState[DIK_K] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsLArrowPressed()
+{
+	if(m_keyboardState[DIK_L] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}

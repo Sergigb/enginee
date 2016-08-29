@@ -43,7 +43,16 @@ public:
 	void GetMouseLocation(int&, int&);
 	bool IsLeftArrowPressed();
 	bool IsRightArrowPressed();
-
+	bool IsWArrowPressed();
+	bool IsAArrowPressed();
+	bool IsSArrowPressed();
+	bool IsDArrowPressed();
+	bool IsQArrowPressed();
+	bool IsEArrowPressed();
+	bool IsIArrowPressed();
+	bool IsJArrowPressed();
+	bool IsKArrowPressed();
+	bool IsLArrowPressed();
 private:
 	bool ReadKeyboard();
 	bool ReadMouse();

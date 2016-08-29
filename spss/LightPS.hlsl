@@ -70,7 +70,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
         color += (diffuseColor * lightIntensity);
 
         // Saturate the ambient and diffuse color.
-       // color = saturate(color);
+        color = saturate(color);
 
         // Calculate the reflection vector based on the light intensity, normal vector, and light direction.
         reflection = normalize(2 * lightIntensity * input.normal - lightDir); 

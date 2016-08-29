@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="ObjectClass.h" />
     <ClInclude Include="SystemClass.h" />
   </ItemGroup>

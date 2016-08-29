@@ -34,8 +34,30 @@ void Object::GetCoordinates(double *x, double *y, double *z){
 }
 
 
-void Object::GetRotation(DirectX::XMVECTOR *rotation){
-	*rotation = m_objectRotation;
+void Object::GetRotation(DirectX::XMFLOAT3 *rotation){
+	DirectX::XMMATRIX temp;
+	DirectX::XMFLOAT4X4 rmatrix;
+	temp = DirectX::XMMatrixRotationQuaternion(m_objectRotation);
+	DirectX::XMStoreFloat4x4(&rmatrix, temp);
+
+	if(rmatrix._11 == 1.0f){
+		rotation->x = atan2f(rmatrix._13, rmatrix._34); 
+		rotation->y = 0.0f; 
+		rotation->z = 0.0f; 
+	}
+	else if(rmatrix._11 == -1.0f){
+		rotation->x = atan2f(rmatrix._13, rmatrix._34); 
+		rotation->y = 0.0f; 
+		rotation->z = 0.0f; 
+	}
+	else{
+		rotation->x = atan2(-rmatrix._31, rmatrix._11); 
+		rotation->y = asin(rmatrix._21);
+		rotation->z = atan2(-rmatrix._23, rmatrix._22);
+	}
+	rotation->x = DirectX::XMConvertToDegrees(rotation->x);
+	rotation->y = DirectX::XMConvertToDegrees(rotation->y);
+	rotation->z = DirectX::XMConvertToDegrees(rotation->z);
 }
 
 

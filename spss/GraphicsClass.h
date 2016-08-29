@@ -19,6 +19,7 @@
 #include "textclass.h"
 #include "modellistclass.h"
 #include "frustumclass.h"
+#include "Object.h"
 
 /////////////
 // GLOBALS //
@@ -41,7 +42,7 @@ public:
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame(float);
-	bool Render();
+	bool Render(Object *);
 
 
 private:

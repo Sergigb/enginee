@@ -1,11 +1,4 @@
-#include <math.h>
-#include <stdio.h>
-#include <conio.h>
-#include <iostream>
-
-
-#include "Common.h"
-#include "ObjectClass.h"
+#include "main.h"
 
 
 int main(void) {
@@ -23,83 +16,110 @@ int main(void) {
 		std::cout << "8 - GetSpeed - shows the current object speed" << std::endl;
 		std::cout << "0 - exit" << std::endl;
 
+		std::cin >> opt;
 		switch(opt){
 		case 1:
-			setSpeed(test);
+			setSpeed(&test);
 			break;
 		case 2:
-			setRotation(test);
+			setRotation(&test);
 			break;
 		case 3:
-			translate(test);
+			translate(&test);
 			break;
 		case 4:
-			rotate(test);
+			rotate(&test);
 			break;
 		case 5:
-			frame(test);
+			frame(&test);
 			break;
 		case 6:
-			getCoordinates(test);
+			getCoordinates(&test);
 			break;
 		case 7:
-			getRotation(test);
+			getRotation(&test);
 			break;
 		case 8:
-			getSpeed(test);
+			getSpeed(&test);
 			break;
 		case 0:
 			i = 0;
 			break;
 		}
-		std::cin >> opt;
+
 	}
 	
-	getch();
 	return 0;
 }
 
 
-void setSpeed(Object object){
+void setSpeed(Object *object){
+	float x, y, z;
+	DirectX::XMFLOAT3 speed;
+
+	system("CLS");
+
+	std::cout << "X component: ";
+	std::cin >> x;
+	std::cout << "Y component: ";
+	std::cin >> y;
+	std::cout << "Z component: ";
+	std::cin >> z;
+
+	object->SetSpeed(x,y,z);
+	object->GetSpeed(&speed);
+	std::cout << "Speed set to: " << speed.x << ", " << speed.y << ", " << speed.z << std::endl;
+}
+
+
+void setRotation(Object *object){
+	float x, y, z;
+	DirectX::XMFLOAT3 rotation;
+
+	system("CLS");
+
+	std::cout << "X component: ";
+	std::cin >> x;
+	std::cout << "Y component: ";
+	std::cin >> y;
+	std::cout << "Z component: ";
+	std::cin >> z;
+
+	object->SetRotation(x,y,z);
+	object->GetRotation(&rotation);
+	std::cout << "Rotation set to: " << rotation.x << ", " << rotation.y << ", " << rotation.z << std::endl;
+}
+
+
+void translate(Object *object){
 
 
 }
 
 
-void setRotation(Object object){
-	
-}
-
-
-void translate(Object object){
-
+void rotate(Object *object){
 
 }
 
 
-void rotate(Object object){
-
-}
-
-
-void frame(Object object){
+void frame(Object *object){
 
 
 }
 
 
-void getCoordinates(Object object){
+void getCoordinates(Object *object){
 
 
 }
 
 
-void getRotation(Object object){
+void getRotation(Object *object){
 
 }
 
 
-void getSpeed(Object object){
+void getSpeed(Object *object){
 
 
 }

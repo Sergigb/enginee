@@ -26,7 +26,7 @@ public:
 	Object();
 	~Object();
 	void GetCoordinates(double*, double*, double*);
-	void GetRotation(DirectX::XMVECTOR*);
+	void GetRotation(DirectX::XMFLOAT3*);
 	void GetSpeed(DirectX::XMFLOAT3*);
 
 	void SetSpeed(float, float, float);
