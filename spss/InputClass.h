@@ -53,6 +53,8 @@ public:
 	bool IsJArrowPressed();
 	bool IsKArrowPressed();
 	bool IsLArrowPressed();
+	bool IsUArrowPressed();
+	bool IsOArrowPressed();
 private:
 	bool ReadKeyboard();
 	bool ReadMouse();

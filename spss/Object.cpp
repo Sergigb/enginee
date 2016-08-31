@@ -102,34 +102,13 @@ void Object::SetRotation(float rotationX, float rotationY, float rotationZ){
 
 
 void Object::rotate(float rotationX, float rotationY, float rotationZ){
-	/*DirectX::XMVECTOR qx, qy, qz;
-	DirectX::XMVECTOR qt, qr;
-	DirectX::XMVECTOR axisX = DirectX::XMVectorSet(1,0,0,0); 
-	DirectX::XMVECTOR axisY = DirectX::XMVectorSet(0,1,0,0);
-	DirectX::XMVECTOR axisZ = DirectX::XMVectorSet(0,0,1,0);
-
-	qx = DirectX::XMQuaternionIdentity();
-	qy = DirectX::XMQuaternionIdentity();
-	qz = DirectX::XMQuaternionIdentity();
-
-	qx = DirectX::XMQuaternionRotationAxis(axisX, DirectX::XMConvertToRadians(rotationX));
-	qy = DirectX::XMQuaternionRotationAxis(axisY, DirectX::XMConvertToRadians(rotationY));					//aquí puede que se pueda usar la función XMQaternionRotationNormal ya que usamos las normales de los vectores
-	qz = DirectX::XMQuaternionRotationAxis(axisZ, DirectX::XMConvertToRadians(rotationZ));
-
-	qt = DirectX::XMQuaternionMultiply(qx, qy);
-	qr = DirectX::XMQuaternionMultiply(qt, qz);*/
-	///////////////////////////
-	DirectX::XMMATRIX rLocal;										//NO SÉ POR QUÉ COÑO LO DE LOS QUATERNIONES NO FUNCIONA PERO ESTO VAAHAHJVHJHJAHJ ofafjawigwagjkl
 	DirectX::XMMATRIX rot;	
-
+	DirectX::XMMATRIX rLocal;
 
 	rLocal = DirectX::XMMatrixRotationQuaternion(m_objectRotation);
 	rot = DirectX::XMMatrixRotationRollPitchYaw(rotationX, rotationY, rotationZ);
 	rLocal = DirectX::XMMatrixMultiply(rot, rLocal);
 	m_objectRotation = DirectX::XMQuaternionRotationMatrix(rLocal);
-
-
-	//m_objectRotation = DirectX::XMQuaternionMultiply(m_objectRotation, qr);
 }
 
 
@@ -160,11 +139,12 @@ void Object::translateLocal(double x, double y, double z){
 	DirectX::XMFLOAT4X4 rotationMatrix_;
 
 	transMatrix = DirectX::XMMatrixTranslation(x, y, z);
-	rotationMatrix = DirectX::XMMatrixMultiply(rotationMatrix, transMatrix);
+	rotationMatrix = DirectX::XMMatrixMultiply(transMatrix, rotationMatrix);
 
 	DirectX::XMStoreFloat4x4(&rotationMatrix_, rotationMatrix);
 	
 	m_objectCoordinates.x += (float)rotationMatrix_._41;
 	m_objectCoordinates.y += (float)rotationMatrix_._42;
 	m_objectCoordinates.z += (float)rotationMatrix_._43;
+
 }

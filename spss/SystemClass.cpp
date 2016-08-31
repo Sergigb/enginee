@@ -236,7 +236,7 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-
+	//el input chapucero hay que cambiarlo
 
 	if(m_Input->IsAArrowPressed()){
 		m_object->rotate(0.0f, 0.01f, 0.0f);
@@ -278,7 +278,13 @@ bool SystemClass::Frame()
 		m_object->translateLocal(0.0f, -0.01f, 0.0f);
 	}
 
+	if(m_Input->IsOArrowPressed()){
+		m_object->translateLocal(0.0f, 0.0f, -0.01f);
+	}
 
+	if(m_Input->IsUArrowPressed()){
+		m_object->translateLocal(0.0f, 0.0f, 0.01f);
+	}
 
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());

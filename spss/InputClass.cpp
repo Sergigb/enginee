@@ -370,3 +370,24 @@ bool InputClass::IsLArrowPressed()
 
 	return false;
 }
+
+bool InputClass::IsUArrowPressed(){
+
+	if(m_keyboardState[DIK_U] & 0x80)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+
+bool InputClass::IsOArrowPressed(){
+
+	if(m_keyboardState[DIK_O] & 0x80)
+	{
+		return true;
+	}
+	
+	return false;
+}
