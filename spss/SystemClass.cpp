@@ -223,7 +223,7 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool keyDown, result;
-	float rotationY;
+	float rotationY, rotationX;
 
 
 	// Update the system stats.
@@ -238,69 +238,67 @@ bool SystemClass::Frame()
 
 	//el input chapucero hay que cambiarlo
 
-	if(m_Input->IsAArrowPressed()){
+	if(m_Input->IsPressed(DIK_A)){
 		m_object->rotate(0.0f, 0.01f, 0.0f);
 	}
 
-	if(m_Input->IsDArrowPressed()){
+	if(m_Input->IsPressed(DIK_D)){
 		m_object->rotate(0.0f, -0.01f, 0.0f);
 	}
 
-	if(m_Input->IsWArrowPressed()){
+	if(m_Input->IsPressed(DIK_W)){
 		m_object->rotate(0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsSArrowPressed()){
+	if(m_Input->IsPressed(DIK_S)){
 		m_object->rotate(-0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsQArrowPressed()){
+	if(m_Input->IsPressed(DIK_Q)){
 		m_object->rotate(0.0f, 0.0f, 0.01f);
 	}
 
-	if(m_Input->IsEArrowPressed()){
+	if(m_Input->IsPressed(DIK_E)){
 		m_object->rotate(0.0f, 0.0f, -0.01f);
 	}
 
-	if(m_Input->IsIArrowPressed()){
+	if(m_Input->IsPressed(DIK_I)){
 		m_object->translateLocal(0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsKArrowPressed()){
+	if(m_Input->IsPressed(DIK_K)){
 		m_object->translateLocal(-0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsJArrowPressed()){
+	if(m_Input->IsPressed(DIK_J)){
 		m_object->translateLocal(0.0f, 0.01f, 0.0f);
 	}
 
-	if(m_Input->IsLArrowPressed()){
+	if(m_Input->IsPressed(DIK_L)){
 		m_object->translateLocal(0.0f, -0.01f, 0.0f);
 	}
 
-	if(m_Input->IsOArrowPressed()){
+	if(m_Input->IsPressed(DIK_O)){
 		m_object->translateLocal(0.0f, 0.0f, -0.01f);
 	}
 
-	if(m_Input->IsUArrowPressed()){
+	if(m_Input->IsPressed(DIK_U)){
 		m_object->translateLocal(0.0f, 0.0f, 0.01f);
 	}
+
+	if(m_Input->IsRMBpressed())
+		m_object->translateXYZ(0.0f, 0.0f, -0.2f);
 
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
-	// Check if the left or right arrow key has been pressed, if so rotate the camera accordingly.
-	keyDown = m_Input->IsLeftArrowPressed();
-	m_Position->TurnLeft(keyDown);
-
-	keyDown = m_Input->IsRightArrowPressed();
-	m_Position->TurnRight(keyDown);
+	m_Position->Rotate(m_Input->IsPressed(DIK_LEFT), m_Input->IsPressed(DIK_RIGHT), m_Input->IsPressed(DIK_UP), m_Input->IsPressed(DIK_DOWN));
 
 	// Get the current view point rotation.
-	m_Position->GetRotation(rotationY);
+	m_Position->GetRotation(rotationY, rotationX);
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(rotationY);
+	result = m_Graphics->Frame(rotationY, rotationX, m_Input->IsPressed(DIK_NUMPAD8));
 
 	if(!result)
 	{

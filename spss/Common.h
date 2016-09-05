@@ -21,7 +21,7 @@ typedef struct coordinates{
 	double x;
 	double y;
 	double z;
-};
+}coordinates;
 
 }
 
@@ -29,7 +29,6 @@ typedef struct coordinates{
 //CONSTANTS //
 //////////////
 
-#define MAX_
 
 
 #endif

@@ -41,20 +41,9 @@ public:
 
 	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
-	bool IsLeftArrowPressed();
-	bool IsRightArrowPressed();
-	bool IsWArrowPressed();
-	bool IsAArrowPressed();
-	bool IsSArrowPressed();
-	bool IsDArrowPressed();
-	bool IsQArrowPressed();
-	bool IsEArrowPressed();
-	bool IsIArrowPressed();
-	bool IsJArrowPressed();
-	bool IsKArrowPressed();
-	bool IsLArrowPressed();
-	bool IsUArrowPressed();
-	bool IsOArrowPressed();
+
+	bool IsPressed(int);
+	bool IsRMBpressed();
 private:
 	bool ReadKeyboard();
 	bool ReadMouse();
@@ -67,7 +56,7 @@ private:
 	IDirectInputDevice8* m_mouse;
 
 	unsigned char m_keyboardState[256];
-	DIMOUSESTATE m_mouseState;
+	DIMOUSESTATE2 m_mouseState;
 
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;

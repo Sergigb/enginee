@@ -242,152 +242,25 @@ void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 }
 
 
-bool InputClass::IsLeftArrowPressed()
-{
-	if(m_keyboardState[DIK_LEFT] & 0x80)
-	{
-		return true;
-	}
+bool InputClass::IsPressed(int key){
 
-	return false;
-}
-
-
-bool InputClass::IsRightArrowPressed()
-{
-	if(m_keyboardState[DIK_RIGHT] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsAArrowPressed()
-{
-	if(m_keyboardState[DIK_A] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsSArrowPressed()
-{
-	if(m_keyboardState[DIK_S] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsDArrowPressed()
-{
-	if(m_keyboardState[DIK_D] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsWArrowPressed()
-{
-	if(m_keyboardState[DIK_W] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsQArrowPressed()
-{
-	if(m_keyboardState[DIK_Q] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsEArrowPressed()
-{
-	if(m_keyboardState[DIK_E] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsIArrowPressed()
-{
-	if(m_keyboardState[DIK_I] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsJArrowPressed()
-{
-	if(m_keyboardState[DIK_J] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsKArrowPressed()
-{
-	if(m_keyboardState[DIK_K] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool InputClass::IsLArrowPressed()
-{
-	if(m_keyboardState[DIK_L] & 0x80)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool InputClass::IsUArrowPressed(){
-
-	if(m_keyboardState[DIK_U] & 0x80)
+	if(m_keyboardState[key] & 0x80)
 	{
 		return true;
 	}
 	
 	return false;
+
 }
 
+bool InputClass::IsRMBpressed(){
+	BYTE *buttonsState;
+	buttonsState = new BYTE[4]; 
 
-bool InputClass::IsOArrowPressed(){
+	buttonsState = m_mouseState.rgbButtons;
 
-	if(m_keyboardState[DIK_O] & 0x80)
-	{
+	if(buttonsState[0] && 0x80)
 		return true;
-	}
-	
+
 	return false;
 }

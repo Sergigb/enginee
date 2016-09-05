@@ -101,3 +101,23 @@ void CameraClass::GetViewMatrix(D3DXMATRIX& viewMatrix)
 	return;
 }
 
+
+void CameraClass::TranslateXYZ(float x, float y, float z){
+	m_positionX += x;
+	m_positionY += y;
+	m_positionZ += z;
+}
+
+void CameraClass::TranslateLocal(float x, float y, float z){
+	D3DXMATRIX transMat; 
+	D3DXMATRIX rotMat;
+	
+	D3DXMatrixTranslation(&transMat, x, y, z);
+	D3DXMatrixRotationYawPitchRoll(&rotMat, m_rotationX, m_rotationY, m_rotationZ);
+
+	D3DXMatrixMultiply(&rotMat, &transMat, &rotMat); 
+	
+	m_positionX += rotMat._41;
+	m_positionY += rotMat._42;
+	m_positionZ += rotMat._43;
+}

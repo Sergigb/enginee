@@ -41,7 +41,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(float);
+	bool Frame(float, float, bool);
 	bool Render(Object *);
 
 
