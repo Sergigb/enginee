@@ -32,7 +32,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 
 	bool result;
-	D3DXMATRIX baseViewMatrix;
+	DirectX::XMMATRIX baseViewMatrix;
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
@@ -296,9 +296,6 @@ bool GraphicsClass::Frame(float rotationY, float rotationX, bool forward)
 
 	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
 
-	// Set the position of the camera.
-//m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-
 	if(forward)
 		m_Camera->TranslateLocal(0.1f, 0.0f, 0.0f);
 
@@ -309,10 +306,10 @@ bool GraphicsClass::Frame(float rotationY, float rotationX, bool forward)
 bool GraphicsClass::Render(Object *m_object)
 {
 
-	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+	DirectX::XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	float positionX, positionY, positionZ, radius;
 	int modelCount, renderCount, index;
-	D3DXVECTOR4 color;
+	DirectX::XMFLOAT4 color;
 	bool renderModel, result;
 
 
@@ -353,7 +350,7 @@ bool GraphicsClass::Render(Object *m_object)
 		if(renderModel)
 		{
 			// Move the model to the location it should be rendered at.
-			D3DXMatrixTranslation(&worldMatrix, positionX, positionY, positionZ); 
+			worldMatrix = DirectX::XMMatrixTranslation(positionX, positionY, positionZ);
 
 			// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 			m_Model->Render(m_D3D->GetDeviceContext());
@@ -376,22 +373,16 @@ bool GraphicsClass::Render(Object *m_object)
 	Common::coordinates coords;
 	DirectX::XMVECTOR quatRot;
 	DirectX::XMFLOAT4 f_rotation;
-	D3DXMATRIX mat_rotation;
-	D3DXQUATERNION d3dxquat;
+	DirectX::XMMATRIX mat_rotation;
 
 	m_object->GetQuaternion(&quatRot);
 	m_object->GetCoordinates(&coords.x, &coords.y, &coords.z);
 
 	DirectX::XMStoreFloat4(&f_rotation, quatRot);
 
-	d3dxquat.w = f_rotation.w;
-	d3dxquat.x = f_rotation.x;
-	d3dxquat.y = f_rotation.y;
-	d3dxquat.z = f_rotation.z;
-
-	D3DXMatrixRotationQuaternion(&mat_rotation, &d3dxquat);
-	D3DXMatrixTranslation(&worldMatrix, coords.x, coords.y, coords.z);
-	D3DXMatrixMultiply(&worldMatrix, &mat_rotation, &worldMatrix);
+	mat_rotation = DirectX::XMMatrixRotationQuaternion(quatRot);
+	worldMatrix = DirectX::XMMatrixTranslation(coords.x, coords.y, coords.z);
+	worldMatrix = DirectX::XMMatrixMultiply(mat_rotation, worldMatrix);
 
 	m_Model->Render(m_D3D->GetDeviceContext());
 

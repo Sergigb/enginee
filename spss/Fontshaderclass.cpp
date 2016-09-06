@@ -51,8 +51,8 @@ void FontShaderClass::Shutdown()
 }
 
 
-bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-			     D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
+bool XM_CALLCONV FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::CXMMATRIX worldMatrix, DirectX::CXMMATRIX viewMatrix, 
+			     DirectX::CXMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 pixelColor)
 {
 	bool result;
 
@@ -323,14 +323,17 @@ void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 }
 
 
-bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, 
-					  D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
+bool XM_CALLCONV FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::CXMMATRIX worldMatrix_, DirectX::CXMMATRIX viewMatrix_, 
+					  DirectX::CXMMATRIX projectionMatrix_, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT4 pixelColor)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	ConstantBufferType* dataPtr;
 	unsigned int bufferNumber;
 	PixelBufferType* dataPtr2;
+	DirectX::XMMATRIX projectionMatrix = projectionMatrix_;
+	DirectX::XMMATRIX viewMatrix = viewMatrix_;
+	DirectX::XMMATRIX worldMatrix = worldMatrix_;
 
 
 	// Lock the constant buffer so it can be written to.
@@ -344,9 +347,9 @@ bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3
 	dataPtr = (ConstantBufferType*)mappedResource.pData;
 
 	// Transpose the matrices to prepare them for the shader.
-	D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
-	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+	worldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
+	viewMatrix = DirectX::XMMatrixTranspose(viewMatrix);
+	projectionMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = worldMatrix;

@@ -8,7 +8,8 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <d3dx10math.h>
+//#include <d3dx10math.h>
+#include <DirectXMath.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -21,7 +22,7 @@ class ModelListClass
 private:
 	struct ModelInfoType
 	{
-		D3DXVECTOR4 color;
+		DirectX::XMFLOAT4 color;
 		float positionX, positionY, positionZ;
 	};
 
@@ -34,7 +35,7 @@ public:
 	void Shutdown();
 
 	int GetModelCount();
-	void GetData(int, float&, float&, float&, D3DXVECTOR4&);
+	void GetData(int, float&, float&, float&, DirectX::XMFLOAT4&);
 
 private:
 	int m_modelCount;

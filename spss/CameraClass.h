@@ -8,8 +8,8 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <d3dx10math.h>
-
+//#include <d3dx10math.h>
+#include <DirectXMath.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: CameraClass
@@ -26,16 +26,16 @@ public:
 	void TranslateXYZ(float, float, float);
 	void TranslateLocal(float, float, float);
 
-	D3DXVECTOR3 GetPosition();
-	D3DXVECTOR3 GetRotation();
+	DirectX::XMFLOAT3 GetPosition();
+	DirectX::XMFLOAT3 GetRotation();
 
 	void Render();
-	void GetViewMatrix(D3DXMATRIX&);
+	void GetViewMatrix(DirectX::XMMATRIX&);
 
 private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
-	D3DXMATRIX m_viewMatrix;
+	DirectX::XMMATRIX m_viewMatrix;
 };
 
 #endif

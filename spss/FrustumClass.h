@@ -3,13 +3,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _FRUSTUMCLASS_H_
 #define _FRUSTUMCLASS_H_
+#define XM_CALLCONV __fastcall
 
 
 //////////////
 // INCLUDES //
 //////////////
-#include <d3dx10math.h>
+//#include <d3dx10math.h>
+#include <DirectXMath.h>
 
+typedef const DirectX::XMVECTOR  FXMVECTOR;
+typedef const DirectX::XMVECTOR& GXMVECTOR;
+typedef const DirectX::XMVECTOR& HXMVECTOR;
+typedef const DirectX::XMVECTOR& CXMVECTOR;
+typedef const DirectX::XMMATRIX& FXMMATRIX;
+typedef const DirectX::XMMATRIX& CXMMATRIX;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: FrustumClass
@@ -21,7 +29,7 @@ public:
 	FrustumClass(const FrustumClass&);
 	~FrustumClass();
 
-	void ConstructFrustum(float, D3DXMATRIX, D3DXMATRIX);
+	void XM_CALLCONV ConstructFrustum(float, DirectX::CXMMATRIX, DirectX::CXMMATRIX);
 
 	bool CheckPoint(float, float, float);
 	bool CheckCube(float, float, float, float);
@@ -29,7 +37,7 @@ public:
 	bool CheckRectangle(float, float, float, float, float, float);
 
 private:
-	D3DXPLANE m_planes[6];
+	DirectX::XMVECTOR m_planes[6];
 };
 
 #endif
