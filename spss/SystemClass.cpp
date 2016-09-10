@@ -311,7 +311,6 @@ bool SystemClass::Frame()
 	{
 		return false;
 	}
-
 	return true;
 }
 
@@ -320,6 +319,13 @@ bool SystemClass::Frame()
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
+	switch(umsg){
+		case WM_KEYUP:{
+			MessageBox(m_hwnd, L"keyyyy.", L"DOOOWN", MB_OK);
+		}
+	}
+
+
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
@@ -341,7 +347,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_applicationName = L"Engine";
 
 	// Setup the windows class with default settings.
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.style = 0;//CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
@@ -381,8 +387,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	else
 	{
 		// If windowed then set it to 800x600 resolution.
-		screenWidth  = 800;
-		screenHeight = 600;
+		screenWidth  = 1280;
+		screenHeight = 720;
 
 		// Place the window in the middle of the screen.
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
@@ -390,8 +396,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	}
 
 	// Create the window with the screen settings and get the handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 
-				WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+	m_hwnd = CreateWindowEx(WS_EX_CLIENTEDGE|WS_EX_ACCEPTFILES, m_applicationName, m_applicationName, 
+				WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 				posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
@@ -432,8 +438,11 @@ void SystemClass::ShutdownWindows()
 }
 
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
+
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam){
+
+	SetFocus(hwnd);
 	switch(umessage)
 	{
 		// Check if the window is being destroyed.
@@ -449,6 +458,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 			PostQuitMessage(0);		
 			return 0;
 		}
+		case WM_KEYDOWN:{
+			
+		}
+						
 
 		// All other messages pass to the message handler in the system class.
 		default:
@@ -457,4 +470,3 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 		}
 	}
 }
-

@@ -64,12 +64,7 @@ private:
 	Object *m_object;
 };
 
-
-/////////////////////////
-// FUNCTION PROTOTYPES //
-/////////////////////////
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
+	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 /////////////
 // GLOBALS //
