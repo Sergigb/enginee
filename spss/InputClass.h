@@ -14,15 +14,14 @@
 /////////////
 // LINKING //
 /////////////
-#pragma comment(lib, "dinput8.lib")
+//#pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
 
 //////////////
 // INCLUDES //
 //////////////
-#include <dinput.h>
-
+#include <Windows.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,33 +29,35 @@
 ////////////////////////////////////////////////////////////////////////////////
 class InputClass
 {
+	typedef struct keyboard{
+		bool keyState;
+		LPARAM lparam;
+	}keyboard;
+
 public:
 	InputClass();
 	InputClass(const InputClass&);
 	~InputClass();
 
-	bool Initialize(HINSTANCE, HWND, int, int);
 	void Shutdown();
 	bool Frame();
 
 	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
 
-	bool IsPressed(int);
+	bool IsPressed(unsigned char);
 	bool IsRMBpressed();
+
+	void setKey(bool, unsigned int, LPARAM);
+		void unsetKey(bool, unsigned int, LPARAM);
 private:
+	keyboard m_keyboardState[256];
+
 	bool ReadKeyboard();
 	bool ReadMouse();
 	void ProcessInput();
 
 private:
-
-	IDirectInput8* m_directInput;
-	IDirectInputDevice8* m_keyboard;
-	IDirectInputDevice8* m_mouse;
-
-	unsigned char m_keyboardState[256];
-	DIMOUSESTATE2 m_mouseState;
 
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;

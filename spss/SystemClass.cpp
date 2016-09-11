@@ -44,16 +44,9 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
-	// Initialize the input object.
-	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
-	if(!result)
-	{
-		MessageBox(m_hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
-		return false;
-	}
-
 	// Create the graphics object.  This object will handle rendering all the graphics for this application.
 	m_Graphics = new GraphicsClass;
+	
 	if(!m_Graphics)
 	{
 		return false;
@@ -162,7 +155,6 @@ void SystemClass::Shutdown()
 	// Release the input object.
 	if(m_Input)
 	{
-		m_Input->Shutdown();
 		delete m_Input;
 		m_Input = 0;
 	}
@@ -210,10 +202,10 @@ void SystemClass::Run()
 		}
 
 		// Check if the user pressed escape and wants to quit.
-		if(m_Input->IsEscapePressed() == true)
+		/*if(m_Input->IsEscapePressed() == true)
 		{
 			done = true;
-		}
+		}*/
 	}
 
 	return;
@@ -229,76 +221,70 @@ bool SystemClass::Frame()
 	// Update the system stats.
 	m_Timer->Frame();
 
-	// Do the input frame processing.
-	result = m_Input->Frame();
-	if(!result)
-	{
-		return false;
-	}
 
 	//el input chapucero hay que cambiarlo
 
-	if(m_Input->IsPressed(DIK_A)){
+	if(m_Input->IsPressed(0x41)){
 		m_object->rotate(0.0f, 0.01f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_D)){
+	if(m_Input->IsPressed(0x44)){
 		m_object->rotate(0.0f, -0.01f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_W)){
+	if(m_Input->IsPressed(0x57)){
 		m_object->rotate(0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_S)){
+	if(m_Input->IsPressed(0x53)){
 		m_object->rotate(-0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_Q)){
+	if(m_Input->IsPressed(0x51)){
 		m_object->rotate(0.0f, 0.0f, 0.01f);
 	}
 
-	if(m_Input->IsPressed(DIK_E)){
+	if(m_Input->IsPressed(0x45)){
 		m_object->rotate(0.0f, 0.0f, -0.01f);
 	}
 
-	if(m_Input->IsPressed(DIK_I)){
+	if(m_Input->IsPressed(0x49)){
 		m_object->translateLocal(0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_K)){
+	if(m_Input->IsPressed(0x4B)){
 		m_object->translateLocal(-0.01f, 0.0f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_J)){
+	if(m_Input->IsPressed(0x4A)){
 		m_object->translateLocal(0.0f, 0.01f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_L)){
+	if(m_Input->IsPressed(0x4C)){
 		m_object->translateLocal(0.0f, -0.01f, 0.0f);
 	}
 
-	if(m_Input->IsPressed(DIK_O)){
+	if(m_Input->IsPressed(0x4F)){
 		m_object->translateLocal(0.0f, 0.0f, -0.01f);
 	}
 
-	if(m_Input->IsPressed(DIK_U)){
+	if(m_Input->IsPressed(0x55)){
 		m_object->translateLocal(0.0f, 0.0f, 0.01f);
 	}
 
-	if(m_Input->IsRMBpressed())
-		m_object->translateXYZ(0.0f, 0.0f, -0.2f);
+	/*if(m_Input->IsRMBpressed())
+		m_object->translateXYZ(0.0f, 0.0f, -0.2f);*/
 
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
-	m_Position->Rotate(m_Input->IsPressed(DIK_LEFT), m_Input->IsPressed(DIK_RIGHT), m_Input->IsPressed(DIK_UP), m_Input->IsPressed(DIK_DOWN));
+	m_Position->Rotate(m_Input->IsPressed(VK_LEFT), m_Input->IsPressed(VK_RIGHT), m_Input->IsPressed(VK_UP), m_Input->IsPressed(VK_DOWN));
 
 	// Get the current view point rotation.
 	m_Position->GetRotation(rotationY, rotationX);
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(rotationY, rotationX, m_Input->IsPressed(DIK_NUMPAD8));
+	result = m_Graphics->Frame(rotationY, rotationX, false /*m_Input->IsPressed(DIK_NUMPAD8)*/);
 
 	if(!result)
 	{
@@ -318,20 +304,29 @@ bool SystemClass::Frame()
 
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
+{	
 	switch(umsg){
 		case WM_KEYUP:{
-			MessageBox(m_hwnd, L"keyyyy.", L"DOOOWN", MB_OK);
+		//MessageBox(m_hwnd, L"keyup.", L"Error", MB_OK);
+			ApplicationHandle->m_Input->unsetKey(false, (unsigned int)wparam, lparam);
+			break;
+		}
+	
+	
+		case WM_KEYDOWN:{
+			//MessageBox(m_hwnd, L"keydown.", L"Error", MB_OK);
+			ApplicationHandle->m_Input->setKey(true, (unsigned int)wparam, lparam);
+			break;
 		}
 	}
-
-
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {
+	RECT rcClient, rcWind;
+	POINT ptDiff;
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
 	int posX, posY;
@@ -396,7 +391,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	}
 
 	// Create the window with the screen settings and get the handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_CLIENTEDGE|WS_EX_ACCEPTFILES, m_applicationName, m_applicationName, 
+	m_hwnd = CreateWindowEx(WS_EX_ACCEPTFILES, m_applicationName, m_applicationName, 
 				WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 				posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
@@ -405,8 +400,17 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	SetForegroundWindow(m_hwnd);
 	SetFocus(m_hwnd);
 
+	if(!FULL_SCREEN){
+		GetClientRect(m_hwnd, &rcClient);
+		GetWindowRect(m_hwnd, &rcWind);
+		ptDiff.x = (rcWind.right - rcWind.left) - rcClient.right;
+		ptDiff.y = (rcWind.bottom - rcWind.top) - rcClient.bottom;
+		MoveWindow(m_hwnd,rcWind.left, rcWind.top, screenWidth + ptDiff.x, screenHeight + ptDiff.y, TRUE);
+	}
+
+
 	// Hide the mouse cursor.
-	ShowCursor(false);
+	ShowCursor(true);
 
 	return;
 }
@@ -442,7 +446,6 @@ void SystemClass::ShutdownWindows()
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam){
 
-	SetFocus(hwnd);
 	switch(umessage)
 	{
 		// Check if the window is being destroyed.
